@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/03/2023 11:05:31 AM
+// Create Date: 11/14/2023 08:22:50 PM
 // Design Name: 
-// Module Name: divider1
+// Module Name: divide
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,38 +20,26 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module divider ( 
+
+module divide(
     input clock,
-    output clk_out,
-    output reg [3:0] AN    
+    output clk_out, 
+    output reg [3:0] an
 );
-
-    reg elapsed;
+    reg elapsed; //elapsed time 1 second
     reg [27:0] state;
-
     
-    always @ (posedge clock) begin
+    always @ (posedge clock)
         if (state == 100000000) state <= 0;
         else state <= state + 1;
-    end
-    
-    // Check If the position at 15 is a bit 0 or 1
-    // Why we need to check this
-    always @ (state) begin
-        case(state[15])
-        1'b0:
-            // 1110 = 14
-            AN <= 4'b1110;
-        1'b1:
-            // 1101 = 13
-            AN <= 4'b1101;
-        endcase
-    end
-
     always @(state)
-        if(state == 100000000) elapsed = 1;
+        if (state == 100000000) elapsed = 1;
         else elapsed = 0;
-        
     assign clk_out = elapsed;
-
+    always @(state)begin
+        case(state[15])
+        1'b0: an <= 4'b1101;
+        1'b1: an <= 4'b1110;
+    endcase
+    end
 endmodule
